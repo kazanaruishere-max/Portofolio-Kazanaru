@@ -13,7 +13,7 @@ export function Manifesto() {
   const lines = profile.manifesto[lang];
 
   return (
-    <section className="cv-auto relative px-6 py-32 md:px-10 md:py-44">
+    <section className="cv-auto relative px-6 py-20 md:px-10 md:py-28">
       <div className="mx-auto max-w-5xl">
         <div>
           {lines.map((line) => (
@@ -37,7 +37,7 @@ function ManifestoLine({ line }: { line: string }) {
     <div className="overflow-hidden">
       <p
         ref={ref}
-        className="py-6 font-display text-3xl font-medium leading-tight tracking-tight text-text will-change-transform md:text-5xl"
+        className="py-4 font-display text-3xl font-medium leading-tight tracking-tight text-text will-change-transform md:text-5xl"
       >
         <PullUp text={line} />
       </p>
