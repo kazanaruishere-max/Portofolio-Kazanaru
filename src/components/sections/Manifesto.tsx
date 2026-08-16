@@ -15,7 +15,7 @@ export function Manifesto() {
   return (
     <section className="cv-auto relative px-6 py-32 md:px-10 md:py-44">
       <div className="mx-auto max-w-5xl">
-        <div className="border-b border-line">
+        <div>
           {lines.map((line) => (
             <ManifestoLine key={line} line={line} />
           ))}
@@ -37,7 +37,7 @@ function ManifestoLine({ line }: { line: string }) {
     <div className="overflow-hidden">
       <p
         ref={ref}
-        className="border-t border-line py-6 font-display text-3xl font-medium leading-tight tracking-tight text-text will-change-transform md:text-5xl"
+        className="py-6 font-display text-3xl font-medium leading-tight tracking-tight text-text will-change-transform md:text-5xl"
       >
         <PullUp text={line} />
       </p>
