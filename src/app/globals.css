@@ -1,26 +1,280 @@
 @import "tailwindcss";
 
+/* ============================================================
+   DESIGN TOKENS — Pure Monochrome, DARK-ONLY (light theme disabled)
+   Strategy: html class="dark" selalu aktif (tanpa next-themes).
+   `:root` = fallback light (tidak terpakai), `.dark` = aktif.
+   ============================================================ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Surfaces */
+  --bg: #f6f6f4;
+  --surface: #ffffff;
+  --surface-elevated: #eeeeeb;
+
+  /* Text */
+  --text-primary: #1a1a1a;
+  --text-secondary: #525252;
+  --text-muted: #6b6b6b;
+
+  /* Mono accent — in a pure-mono system accent = inverse */
+  --accent: #1a1a1a;
+
+  /* Hairlines */
+  --line: rgba(26, 26, 26, 0.12);
+  --line-strong: rgba(26, 26, 26, 0.24);
+
+  /* Inverted (for hover-invert of logos, cursor ring, etc.) */
+  --invert: #f6f6f4;
+
+  /* Z-INDEX SCALE (documented, amendemen/design-taste 6.F)
+     Layer 0-5 depth system — see PRD §14.
+     Grain sits ABOVE content+UI (full-site film grain),
+     below preloader & custom cursor. */
+  --z-base: 0;
+  --z-3d-backdrop: 1;
+  --z-3d-foreground: 2;
+  --z-content: 3;
+  --z-ui: 40;
+  --z-menu: 50;
+  --z-grain: 55;
+  --z-preloader: 60;
+  --z-cursor: 70;
 }
 
+.dark {
+  /* Surfaces */
+  --bg: #0a0a0a;
+  --surface: #131313;
+  --surface-elevated: #1b1b1b;
+
+  /* Text */
+  --text-primary: #ededed;
+  --text-secondary: #a3a3a3;
+  --text-muted: #858585;
+
+  /* Mono accent */
+  --accent: #ededed;
+
+  /* Hairlines */
+  --line: rgba(237, 237, 237, 0.12);
+  --line-strong: rgba(237, 237, 237, 0.24);
+
+  /* Inverted */
+  --invert: #0a0a0a;
+}
+
+/* ============================================================
+   TAILWIND v4 THEME MAPPING
+   ============================================================ */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-text: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-accent: var(--accent);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-invert: var(--invert);
+
+  --font-display: var(--font-clash-display), var(--font-satoshi), ui-sans-serif, system-ui;
+  --font-sans: var(--font-satoshi), ui-sans-serif, system-ui;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+  /* Motion easing token (PRD §8) */
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ============================================================
+   BASE
+   ============================================================ */
+html {
+  scroll-behavior: initial;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-satoshi), ui-sans-serif, system-ui;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.4s var(--ease-expo), color 0.4s var(--ease-expo);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* Focus visibility (a11y — amendemen #5/#7) */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ============================================================
+   GRAIN OVERLAY (amendemen #8) — PNG statis (bukan feTurbulence
+   runtime, hemat GPU mobile). fixed, pointer-events none,
+   mix-blend-overlay, opacity 0.03-0.06.
+   ============================================================ */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-grain);
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("/grain.png");
+  background-size: 150px 150px;
+  background-repeat: repeat;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:not(.motion-full) *,
+  :root:not(.motion-full) *::before,
+  :root:not(.motion-full) *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   TOOLS ORBIT (POLISH §3.1) — per-item orbit, GPU transform
+   ============================================================ */
+.orbit-wrap {
+  --r: clamp(7rem, 17vw, 11rem);
+  --size: clamp(1.4rem, 3.6vw, 2rem);
+}
+
+.orbit-item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--size);
+  height: var(--size);
+  margin-top: calc(-1 * var(--size) / 2);
+  margin-left: calc(-1 * var(--size) / 2);
+  display: grid;
+  place-items: center;
+  color: var(--text-secondary);
+  animation: orbit-spin 48s linear infinite;
+  animation-delay: calc(-48s / var(--n) * var(--i));
+}
+
+@keyframes orbit-spin {
+  from {
+    transform: rotate(0deg) translateX(var(--r)) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(var(--r)) rotate(-360deg);
+  }
+}
+
+.orbit-wrap:hover .orbit-item {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:not(.motion-full) .orbit-item {
+    animation: none;
+    transform: rotate(calc(var(--i) / var(--n) * 360deg)) translateX(var(--r))
+      rotate(calc(-1 * var(--i) / var(--n) * 360deg));
+  }
+
+  /* Timeline horizontal → vertikal (konten tidak terpotong) */
+  :root:not(.motion-full) .timeline-scene {
+    overflow: visible;
+  }
+  :root:not(.motion-full) .timeline-track {
+    flex-direction: column;
+    height: auto;
+    align-items: flex-start;
+    gap: 3rem;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+  :root:not(.motion-full) .timeline-track > * {
+    width: 100% !important;
+  }
+}
+
+/* Mobile/tablet (pin dimatikan di pointer:coarse) → timeline vertikal */
+@media (max-width: 1024px) {
+  .timeline-scene {
+    overflow: visible;
+  }
+  .timeline-track {
+    flex-direction: column;
+    height: auto;
+    align-items: flex-start;
+    gap: 3rem;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+  .timeline-track > * {
+    width: 100% !important;
+  }
+}
+
+/* ============================================================
+   SPLINE — sembunyikan logo/watermark ("Made with Spline")
+   ============================================================ */
+.spline-watermark,
+.spline-logo,
+[class*="spline-watermark"],
+[class*="spline-logo"] {
+  display: none !important;
+}
+
+/* ============================================================
+   PERFORMANCE — content-visibility (skip render section off-screen)
+   Dipakai section non-pin (Story/Manifesto/Craft/Contact/Footer)
+   ============================================================ */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 700px;
+}
+
+/* ============================================================
+   OUTLINED TEXT (POLISH convert 2D editorial — pengganti 3D)
+   ============================================================ */
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--line-strong);
+  text-stroke: 1px var(--line-strong);
+}
+
+@supports not ((-webkit-text-stroke: 1px black) or (text-stroke: 1px black)) {
+  .text-outline {
+    color: var(--text-muted);
+  }
+}
+
+/* ============================================================
+   AURA (POLISH §2.2) — radial glow mengikuti mouse
+   ============================================================ */
+.aura {
+  position: relative;
+  overflow: hidden;
+  --aura-opacity: 0;
+  --aura-x: 50%;
+  --aura-y: 50%;
+}
+
+.aura::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--aura-opacity);
+  background: radial-gradient(
+    220px circle at var(--aura-x) var(--aura-y),
+    var(--line-strong),
+    transparent 70%
+  );
+  transition: opacity 0.25s ease;
 }

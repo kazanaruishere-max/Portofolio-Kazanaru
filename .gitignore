@@ -39,3 +39,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# logs
+*.log
+
+# file sumber & dokumen pribadi di root (sudah disalin/duplikat ke public/ atau tidak dipakai)
+/*.png
+/*.docx
+/*.pdf
+
+# knowledge graph (generated)
+/graphify-out
