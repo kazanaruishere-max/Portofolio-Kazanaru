@@ -47,7 +47,7 @@ export const metadata: Metadata = {
   ],
   creator: "Azka Syahirull",
   authors: [{ name: "Azka Syahirull", url: "https://github.com/kazanaruishere-max" }],
-  metadataBase: new URL("https://azkasyahirull.dev"),
+  metadataBase: new URL("https://portofolio-kazanaru.vercel.app"),
   openGraph: {
     type: "website",
     locale: "id_ID",
@@ -78,7 +78,7 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Azka Syahirull",
-  url: "https://azkasyahirull.dev",
+  url: "https://portofolio-kazanaru.vercel.app",
   jobTitle: "AI Developer",
   description:
     "AI Developer asal Indonesia · membangun AI untuk dampak nyata: keamanan finansial, anti-fraud, dan quantitative trading.",
