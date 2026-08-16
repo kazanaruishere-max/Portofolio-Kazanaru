@@ -8,10 +8,13 @@ import {
   siGo,
   siGodotengine,
   siGooglegemini,
+  siGooglecloud,
+  siHermes,
   siJavascript,
   siJupyter,
   siNextdotjs,
   siNodedotjs,
+  siOpencode,
   siPhp,
   siPostgresql,
   siPython,
@@ -25,6 +28,7 @@ import {
   siThreedotjs,
   siTypescript,
 } from "simple-icons";
+import { BRAND_ICONS } from "@/lib/brand-icons";
 import { cn } from "@/lib/utils";
 import type { Tool } from "@/content/profile";
 
@@ -37,8 +41,11 @@ const ICONS: Record<string, { title: string; path: string }> = {
   nodedotjs: siNodedotjs,
   express: siExpress,
   googlegemini: siGooglegemini,
+  googlecloud: siGooglecloud,
   anthropic: siAnthropic,
   cursor: siCursor,
+  opencode: siOpencode,
+  hermes: siHermes,
   docker: siDocker,
   git: siGit,
   supabase: siSupabase,
@@ -57,13 +64,25 @@ const ICONS: Record<string, { title: string; path: string }> = {
   threedotjs: siThreedotjs,
 };
 
+interface ResolvedIcon {
+  title: string;
+  path: string;
+  fillRule?: "evenodd";
+}
+
+/** Resolve logo: simple-icons dulu, lalu custom mono (brand-icons). */
+function resolveIcon(tool: Tool): ResolvedIcon | undefined {
+  if (!tool.icon) return undefined;
+  return (ICONS[tool.icon] as ResolvedIcon | undefined) ?? BRAND_ICONS[tool.icon];
+}
+
 /**
  * Icon brand untuk tools grid (PRD §6.8.1).
- * - slug di ICONS → render path resmi simple-icons (monokrom, hover invert)
+ * - slug di ICONS/BRAND_ICONS → render path logo (monokrom, hover invert)
  * - tidak tersedia → fallback monogram font display (konsisten bahasa mono)
  */
 export function ToolIcon({ tool, className }: { tool: Tool; className?: string }) {
-  const icon = tool.icon ? ICONS[tool.icon] : undefined;
+  const icon = resolveIcon(tool);
 
   if (icon) {
     return (
@@ -74,7 +93,7 @@ export function ToolIcon({ tool, className }: { tool: Tool; className?: string }
         className={cn("h-6 w-6 fill-current", className)}
       >
         <title>{icon.title}</title>
-        <path d={icon.path} />
+        <path d={icon.path} fillRule={icon.fillRule} />
       </svg>
     );
   }

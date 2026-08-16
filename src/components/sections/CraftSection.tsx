@@ -99,10 +99,7 @@ function CertRow({ cert }: CertRowProps) {
   const note = useT(cert.note);
   const inner = (
     <div className="grid gap-6 lg:grid-cols-12 lg:items-baseline">
-      <span className="font-display text-3xl font-medium text-text-muted lg:col-span-1 md:text-4xl">
-        {cert.index}
-      </span>
-      <div className="lg:col-span-11">
+      <div className="lg:col-span-12">
         <p className="font-display text-3xl font-medium tracking-tight text-text md:text-4xl">
           {title}
         </p>
