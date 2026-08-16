@@ -95,21 +95,6 @@ export const profile = {
     { id: "34 repo · 560+ commits · 31 stars", en: "34 repos · 560+ commits · 31 stars" },
   ],
 
-  marquee: [
-    "Groq",
-    "RAG",
-    "Next.js",
-    "Rust",
-    "Go",
-    "Python",
-    "Supabase",
-    "ChromaDB",
-    "Docker",
-    "Godot",
-    "React",
-    "TypeScript",
-  ],
-
   certificate: {
     title: { id: "Certificate of Achievement · TOP 100", en: "Certificate of Achievement · TOP 100" },
     issuer: "#JuaraVibeCoding 2026 · Google Developer Groups",

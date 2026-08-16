@@ -11,7 +11,7 @@ import {
   TimelineSection,
   WorkSection,
 } from "@/components/sections";
-import { profile } from "@/content/profile";
+import { tools } from "@/content/profile";
 
 export default function HomePage() {
   return (
@@ -24,7 +24,7 @@ export default function HomePage() {
       <NowStrip />
       <Story />
       <Manifesto />
-      <Marquee items={profile.marquee} className="border-y border-line py-4" />
+      <Marquee items={tools} className="border-y border-line py-4" />
       <WorkSection />
       <TimelineSection />
       <CraftSection />

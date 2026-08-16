@@ -4,9 +4,11 @@ import { useEffect, useRef } from "react";
 import { gsap } from "@/lib/animations";
 import { cn } from "@/lib/utils";
 import { prefersReducedMotion } from "@/lib/reduced-motion";
+import { ToolIcon } from "./ToolIcon";
+import type { Tool } from "@/content/profile";
 
 interface MarqueeProps {
-  items: string[];
+  items: Tool[];
   className?: string;
   /** Kecepatan px/detik. Default 60 */
   speed?: number;
@@ -14,16 +16,17 @@ interface MarqueeProps {
   pauseOnHover?: boolean;
 }
 
-function MarqueeRow({ items }: { items: string[] }) {
+function MarqueeRow({ items }: { items: Tool[] }) {
   return (
     <div className="flex shrink-0 items-center" data-marquee-item>
-      {items.map((item, i) => (
+      {items.map((tool) => (
         <span
-          key={i}
-          className="px-8 font-mono text-sm uppercase tracking-[0.2em] text-text-muted"
+          key={tool.name}
+          className="flex items-center gap-2.5 px-6 font-mono text-sm uppercase tracking-[0.2em] text-text-secondary"
         >
-          {item}
-          <span aria-hidden="true" className="ml-16 text-accent">
+          <ToolIcon tool={tool} className="h-4 w-4 shrink-0" />
+          <span className="whitespace-nowrap">{tool.name}</span>
+          <span aria-hidden="true" className="ml-8 text-accent">
             ✦
           </span>
         </span>

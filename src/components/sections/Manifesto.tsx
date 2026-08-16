@@ -16,8 +16,8 @@ export function Manifesto() {
     <section className="cv-auto relative px-6 py-32 md:px-10 md:py-44">
       <div className="mx-auto max-w-5xl">
         <div className="border-b border-line">
-          {lines.map((line, i) => (
-            <ManifestoLine key={line} line={line} index={i} />
+          {lines.map((line) => (
+            <ManifestoLine key={line} line={line} />
           ))}
         </div>
       </div>
@@ -25,7 +25,7 @@ export function Manifesto() {
   );
 }
 
-function ManifestoLine({ line, index }: { line: string; index: number }) {
+function ManifestoLine({ line }: { line: string }) {
   const ref = useProximity<HTMLParagraphElement>({
     type: "shift",
     strength: 0.14,
@@ -40,9 +40,6 @@ function ManifestoLine({ line, index }: { line: string; index: number }) {
         className="border-t border-line py-6 font-display text-3xl font-medium leading-tight tracking-tight text-text will-change-transform md:text-5xl"
       >
         <PullUp text={line} />
-        <span aria-hidden="true" className="ml-4 align-top font-mono text-sm text-text-muted">
-          {String(index + 1).padStart(2, "0")}
-        </span>
       </p>
     </div>
   );
